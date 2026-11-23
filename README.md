@@ -1,4 +1,4 @@
-﻿# Projeto Final – Aplicação Web com Yesod (Haskell)
+# Projeto Final – Aplicação Web com Yesod (Haskell)
 
 > ⚠️ Rascunho inicial. Os itens marcados com `TODO` serão preenchidos conforme o projeto avançar.
 
@@ -16,13 +16,13 @@
 
 ## 3. Instruções de execução
 ```bash
-# TODO: ajustar após criar o projeto
-stack new projeto-final yesod-sqlite
-cd projeto-final
+git clone https://github.com/lealtais/hockey-store-yesod.git
+cd hockey-store-yesod
 stack build
-stack exec projeto-final
-# acessar http://localhost:3000
+stack exec hockey-store
 ```
+
+Depois acesse http://localhost:3000. Requer o [Haskell Stack](https://docs.haskellstack.org/) instalado; o primeiro build baixa o GHC e as dependências e demora.
 
 ## 4. Estrutura do banco de dados (mínimo 7 tabelas reais)
 | # | Tabela | Descrição | Relacionamentos |
