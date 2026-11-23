@@ -1,3 +1,6 @@
+-- By default this file is used by `persistFileWith` in Model.hs (which is imported by Foundation.hs)
+-- Syntax for this file here: https://github.com/yesodweb/persistent/blob/master/docs/Persistent-entity-syntax.md
+
 User
     ident Text
     password Text Maybe
@@ -20,7 +23,8 @@ Marca
 Produto
     nome Text
     descricao Text Maybe
-    preco Double
+    -- valor em centavos
+    preco Int
     estoque Int
     categoriaId CategoriaId
     marcaId MarcaId
@@ -29,6 +33,7 @@ Cliente
     nome Text
     email Text
     telefone Text Maybe
+    userId UserId Maybe
     UniqueCliente email
     deriving Show Eq
 Endereco
@@ -44,13 +49,16 @@ Endereco
 Pedido
     clienteId ClienteId
     enderecoId EnderecoId Maybe
-    status Text default='ABERTO'
-    total Double default=0
+    status StatusPedido default='Aberto'
+    -- valor em centavos
+    total Int default=0
     criadoEm UTCTime default=CURRENT_TIMESTAMP
     deriving Show Eq
 ItemPedido
     pedidoId PedidoId
     produtoId ProdutoId
     quantidade Int
-    precoUnitario Double
+    -- valor em centavos
+    precoUnitario Int
+    UniqueItemPedido pedidoId produtoId
     deriving Show Eq
