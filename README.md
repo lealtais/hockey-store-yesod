@@ -24,16 +24,16 @@ stack exec hockey-store
 
 Depois acesse http://localhost:3000. Requer o [Haskell Stack](https://docs.haskellstack.org/) instalado; o primeiro build baixa o GHC e as dependências e demora.
 
-## 4. Estrutura do banco de dados (mínimo 7 tabelas reais)
-| # | Tabela | Descrição | Relacionamentos |
-|---|--------|-----------|-----------------|
-| 1 | `TODO` | | |
-| 2 | `TODO` | | |
-| 3 | `TODO` | | |
-| 4 | `TODO` | | |
-| 5 | `TODO` | | |
-| 6 | `TODO` | | |
-| 7 | `TODO` | | |
+## 4. Estrutura do banco de dados
+| # | Tabela | Campos principais | Relacionamentos / restrições |
+|---|--------|-------------------|------------------------------|
+| 1 | `Categoria` | `nome` | `nome` único |
+| 2 | `Marca` | `nome`, `pais` (opcional) | `nome` único |
+| 3 | `Produto` | `nome`, `descricao` (opcional), `preco` (em centavos), `estoque`, `categoriaId`, `marcaId` | FK → `Categoria`, `Marca` |
+| 4 | `Cliente` | `nome`, `email`, `telefone` (opcional), `userId` (opcional) | `email` único; FK → `User` (opcional) |
+| 5 | `Endereco` | `clienteId`, `cep`, `logradouro`, `numero`, `complemento` (opcional), `bairro`, `cidade`, `uf` | FK → `Cliente` |
+| 6 | `Pedido` | `clienteId`, `enderecoId` (opcional), `status` (`StatusPedido`: `Aberto`, `Pago`, `Enviado`, `Cancelado`; padrão `Aberto`), `total` (em centavos, padrão `0`), `criadoEm` | FK → `Cliente`, `Endereco` |
+| 7 | `ItemPedido` | `pedidoId`, `produtoId`, `quantidade`, `precoUnitario` (em centavos) | FK → `Pedido`, `Produto`; único (`pedidoId`, `produtoId`) |
 
 ## 5. Integração com API externa
 - **API:** ViaCEP (https://viacep.com.br)

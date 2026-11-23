@@ -11,10 +11,14 @@
 {-# LANGUAGE StandaloneDeriving         #-}
 {-# LANGUAGE UndecidableInstances       #-}
 {-# LANGUAGE DataKinds                  #-}
-module Model where
+module Model
+    ( module Model
+    , module Model.StatusPedido
+    ) where
 
 import ClassyPrelude.Yesod
 import Database.Persist.Quasi
+import Model.StatusPedido
 
 -- You can define all of your database entities in the entities file.
 -- You can find more information on persistent and how to declare entities

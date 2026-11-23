@@ -11,3 +11,54 @@ Email
     userId UserId Maybe
     verkey Text Maybe
     UniqueEmail email
+Categoria
+    nome Text
+    UniqueCategoria nome
+    deriving Show Eq
+Marca
+    nome Text
+    pais Text Maybe
+    UniqueMarca nome
+    deriving Show Eq
+Produto
+    nome Text
+    descricao Text Maybe
+    -- valor em centavos
+    preco Int
+    estoque Int
+    categoriaId CategoriaId
+    marcaId MarcaId
+    deriving Show Eq
+Cliente
+    nome Text
+    email Text
+    telefone Text Maybe
+    userId UserId Maybe
+    UniqueCliente email
+    deriving Show Eq
+Endereco
+    clienteId ClienteId
+    cep Text
+    logradouro Text
+    numero Text
+    complemento Text Maybe
+    bairro Text
+    cidade Text
+    uf Text
+    deriving Show Eq
+Pedido
+    clienteId ClienteId
+    enderecoId EnderecoId Maybe
+    status StatusPedido default='Aberto'
+    -- valor em centavos
+    total Int default=0
+    criadoEm UTCTime default=CURRENT_TIMESTAMP
+    deriving Show Eq
+ItemPedido
+    pedidoId PedidoId
+    produtoId ProdutoId
+    quantidade Int
+    -- valor em centavos
+    precoUnitario Int
+    UniqueItemPedido pedidoId produtoId
+    deriving Show Eq
