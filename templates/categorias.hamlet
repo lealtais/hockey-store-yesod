@@ -1,0 +1,16 @@
+<h1>Categorias
+<table .table>
+  <tr>
+    <th>Nome
+    <th>Ações
+  $forall Entity cid c <- categorias
+    <tr>
+      <td>#{categoriaNome c}
+      <td>
+        <a .btn .btn-default .btn-xs href=@{CategoriaEditarR cid}>Editar
+        <form method=post action=@{CategoriaExcluirR cid} style="display:inline">
+          <button .btn .btn-danger .btn-xs type=submit>Excluir
+<h2>Nova categoria
+<form method=post action=@{CategoriasR} enctype=#{enctype}>
+  ^{widget}
+  <button .btn .btn-primary type=submit>Salvar
