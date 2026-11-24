@@ -124,12 +124,12 @@ instance Yesod App where
                 , NavbarLeft $ MenuItem
                     { menuItemLabel = "Categorias"
                     , menuItemRoute = CategoriasR
-                    , menuItemAccessCallback = True
+                    , menuItemAccessCallback = isJust muser
                     }
                 , NavbarLeft $ MenuItem
                     { menuItemLabel = "Marcas"
                     , menuItemRoute = MarcasR
-                    , menuItemAccessCallback = True
+                    , menuItemAccessCallback = isJust muser
                     }
                 , NavbarRight $ MenuItem
                     { menuItemLabel = "Login"
@@ -285,7 +285,7 @@ isAuthenticated :: Handler AuthResult
 isAuthenticated = do
     muid <- maybeAuthId
     return $ case muid of
-        Nothing -> Unauthorized "You must login to access this page"
+        Nothing -> AuthenticationRequired
         Just _ -> Authorized
 
 instance YesodAuthPersist App
