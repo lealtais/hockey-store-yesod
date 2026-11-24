@@ -17,6 +17,7 @@ listarMarcas = runDB $ selectList [] [Asc MarcaNome]
 
 getMarcasR :: Handler Html
 getMarcasR = do
+    req <- getRequest
     marcas <- listarMarcas
     (widget, enctype) <- generateFormPost (marcaForm Nothing)
     defaultLayout $ do
@@ -34,6 +35,7 @@ postMarcasR = do
                 Nothing -> setMessage "Já existe uma marca com esse nome"
             redirect MarcasR
         _ -> do
+            req <- getRequest
             marcas <- listarMarcas
             defaultLayout $ do
                 setTitle "Marcas - Hockey Store"

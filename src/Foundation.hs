@@ -96,7 +96,7 @@ instance Yesod App where
     -- To add it, chain it together with the defaultMiddleware: yesodMiddleware = defaultYesodMiddleware . defaultCsrfMiddleware
     -- For details, see the CSRF documentation in the Yesod.Core.Handler module of the yesod-core package.
     yesodMiddleware :: ToTypedContent res => Handler res -> Handler res
-    yesodMiddleware = defaultYesodMiddleware
+    yesodMiddleware = defaultYesodMiddleware . defaultCsrfMiddleware
 
     defaultLayout :: Widget -> Handler Html
     defaultLayout widget = do
@@ -181,6 +181,12 @@ instance Yesod App where
     -- the profile route requires that the user is authenticated, so we
     -- delegate to that function
     isAuthorized ProfileR _ = isAuthenticated
+    isAuthorized CategoriasR _ = isAuthenticated
+    isAuthorized (CategoriaEditarR _) _ = isAuthenticated
+    isAuthorized (CategoriaExcluirR _) _ = isAuthenticated
+    isAuthorized MarcasR _ = isAuthenticated
+    isAuthorized (MarcaEditarR _) _ = isAuthenticated
+    isAuthorized (MarcaExcluirR _) _ = isAuthenticated
     isAuthorized _ _ = return Authorized
 
     -- This function creates static content files in the static folder

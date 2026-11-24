@@ -16,6 +16,7 @@ listarCategorias = runDB $ selectList [] [Asc CategoriaNome]
 
 getCategoriasR :: Handler Html
 getCategoriasR = do
+    req <- getRequest
     categorias <- listarCategorias
     (widget, enctype) <- generateFormPost (categoriaForm Nothing)
     defaultLayout $ do
@@ -33,6 +34,7 @@ postCategoriasR = do
                 Nothing -> setMessage "Já existe uma categoria com esse nome"
             redirect CategoriasR
         _ -> do
+            req <- getRequest
             categorias <- listarCategorias
             defaultLayout $ do
                 setTitle "Categorias - Hockey Store"
