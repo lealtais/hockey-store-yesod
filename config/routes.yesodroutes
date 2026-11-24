@@ -17,3 +17,6 @@
 /marcas MarcasR GET POST
 /marcas/#MarcaId/editar MarcaEditarR GET POST
 /marcas/#MarcaId/excluir MarcaExcluirR POST
+/produtos ProdutosR GET POST
+/produtos/#ProdutoId/editar ProdutoEditarR GET POST
+/produtos/#ProdutoId/excluir ProdutoExcluirR POST
