@@ -10,3 +10,10 @@
 / HomeR GET
 
 /profile ProfileR GET
+
+/categorias CategoriasR GET POST
+/categorias/#CategoriaId/editar CategoriaEditarR GET POST
+/categorias/#CategoriaId/excluir CategoriaExcluirR POST
+/marcas MarcasR GET POST
+/marcas/#MarcaId/editar MarcaEditarR GET POST
+/marcas/#MarcaId/excluir MarcaExcluirR POST
