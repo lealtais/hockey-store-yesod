@@ -6,6 +6,7 @@
 module Handler.Pedido where
 
 import Handler.Produto (formatarPreco)
+import Handler.Common (inteiroLimitadoField, mensagemErro, mensagemSucesso)
 import Import
 
 novoPedidoForm :: Form ClienteId
@@ -15,7 +16,7 @@ novoPedidoForm = renderDivs $
 itemForm :: Form (ProdutoId, Int)
 itemForm = renderDivs $ (,)
     <$> areq (selectField (optionsPersistKey [] [Asc ProdutoNome] produtoNome)) "Produto" Nothing
-    <*> areq (checkBool (> 0) ("Quantidade deve ser maior que zero" :: Text) intField) "Quantidade" (Just 1)
+    <*> areq (checkBool (> 0) ("Quantidade deve ser maior que zero" :: Text) inteiroLimitadoField) "Quantidade" (Just 1)
 
 enderecoForm :: Pedido -> Form EnderecoId
 enderecoForm pedido = renderDivs $
@@ -54,7 +55,7 @@ postPedidosR = do
             pid <- runDB $ do
                 _ <- get404 cid
                 insert (Pedido cid Nothing Aberto 0 agora)
-            setMessage "Pedido criado com sucesso"
+            mensagemSucesso "Pedido criado com sucesso"
             redirect (PedidoR pid)
         _ -> renderPedidos widget enctype
 
@@ -93,7 +94,7 @@ comPedidoAberto pid acao = do
 
 responderPedido :: Route App -> Either Text Text -> Handler Html
 responderPedido destino resultado = do
-    setMessage (toHtml (either id id resultado))
+    either mensagemErro mensagemSucesso resultado
     redirect destino
 
 recalcularTotal :: PedidoId -> YesodDB App ()

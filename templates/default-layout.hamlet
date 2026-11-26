@@ -21,5 +21,5 @@
                     <a href=@{route}>#{label}
             <li .active aria-current="page">#{title}
     $maybe msg <- mmsg
-        <div #message .alert.alert-info role="status">#{msg}
+        <div #message>#{msg}
     ^{widget}

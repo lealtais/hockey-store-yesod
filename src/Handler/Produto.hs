@@ -7,6 +7,7 @@ module Handler.Produto where
 
 import Data.Char (isDigit)
 import qualified Data.Text as T
+import Handler.Common (inteiroLimitadoField, mensagemErro, mensagemSucesso)
 import Import
 
 parseCentavos :: Text -> Either Text Int
@@ -21,10 +22,11 @@ parseCentavos raw =
         Just _ ->
             case parsePositivo s of
                 Right c | c <= 0 -> Left "O preço deve ser maior que zero"
-                Right c -> Right c
+                Right c | c > toInteger (maxBound :: Int) -> Left "O preço está acima do limite permitido"
+                Right c -> Right (fromInteger c)
                 Left err -> Left err
   where
-    parsePositivo :: Text -> Either Text Int
+    parsePositivo :: Text -> Either Text Integer
     parsePositivo txt =
         let norm = T.replace "," "." txt
         in case T.splitOn "." norm of
@@ -47,7 +49,7 @@ parseCentavos raw =
 
 formatPrecoInput :: Int -> Text
 formatPrecoInput centavos =
-    let (reais, resto) = abs centavos `quotRem` 100
+    let (reais, resto) = abs (toInteger centavos) `quotRem` 100
         centavosTxt = if resto < 10 then "0" <> tshow resto else tshow resto
         sinal = if centavos < 0 then "-" else ""
     in sinal <> tshow reais <> "," <> centavosTxt
@@ -67,7 +69,7 @@ produtoForm mp = renderDivs $ Produto
     <*> areq (selectField (optionsPersistKey [] [Asc CategoriaNome] categoriaNome)) "Categoria" (produtoCategoriaId <$> mp)
     <*> areq (selectField (optionsPersistKey [] [Asc MarcaNome] marcaNome)) "Marca" (produtoMarcaId <$> mp)
   where
-    estoqueField = checkBool (>= 0) ("O estoque não pode ser negativo" :: Text) intField
+    estoqueField = checkBool (>= 0) ("O estoque não pode ser negativo" :: Text) inteiroLimitadoField
 
 listarProdutos :: Handler [(Entity Produto, Maybe Categoria, Maybe Marca)]
 listarProdutos = runDB $ do
@@ -92,7 +94,7 @@ postProdutosR = do
     case res of
         FormSuccess p -> do
             runDB $ insert_ p
-            setMessage "Produto criado com sucesso"
+            mensagemSucesso "Produto criado com sucesso"
             redirect ProdutosR
         _ -> do
             req <- getRequest
@@ -116,7 +118,7 @@ postProdutoEditarR pid = do
     case res of
         FormSuccess novo -> do
             runDB $ replace pid novo
-            setMessage "Produto atualizado"
+            mensagemSucesso "Produto atualizado"
             redirect ProdutosR
         _ -> defaultLayout $ do
             setTitle "Editar produto - Hockey Store"
@@ -124,10 +126,12 @@ postProdutoEditarR pid = do
 
 postProdutoExcluirR :: ProdutoId -> Handler Html
 postProdutoExcluirR pid = do
-    emUso <- runDB $ count [ItemPedidoProdutoId ==. pid]
+    emUso <- runDB $ do
+        _ <- get404 pid
+        count [ItemPedidoProdutoId ==. pid]
     if emUso > 0
-        then setMessage "Produto já vendido, não pode ser excluído"
+        then mensagemErro "Produto já vendido, não pode ser excluído"
         else do
             runDB $ delete pid
-            setMessage "Produto excluído"
+            mensagemSucesso "Produto excluído"
     redirect ProdutosR

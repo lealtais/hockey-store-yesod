@@ -268,3 +268,15 @@ textarea:focus-visible,
     color: var(--store-muted);
     white-space: normal;
 }
+
+.store-form .errors {
+    margin-top: 6px;
+    color: #a12626;
+    font-weight: 600;
+}
+
+.store-form div:has(> .errors) > input,
+.store-form div:has(> .errors) > select,
+.store-form div:has(> .errors) > textarea {
+    border-color: #a12626;
+}
