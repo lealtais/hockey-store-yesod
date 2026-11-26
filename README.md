@@ -1,20 +1,21 @@
-# Projeto Final – Aplicação Web com Yesod (Haskell)
-
-> ⚠️ Rascunho inicial. Os itens marcados com `TODO` serão preenchidos conforme o projeto avançar.
+# Hockey Store
 
 ## 1. Descrição do projeto
-- **Nome:** Hockey Store (loja de equipamentos de hockey)
-- **Objetivo:** loja virtual de equipamentos de hockey (patins, tacos, proteções, uniformes) com cadastro de produtos, clientes e pedidos
-- **Principais funcionalidades:** `TODO`
-- **Arquitetura escolhida:** A (monolítica com Yesod + Hamlet)
+
+Aplicação web para gerenciar uma loja de equipamentos de hockey. O sistema oferece cadastro, consulta, edição e exclusão de categorias, marcas, produtos, clientes e endereços, além do fluxo de pedidos e itens. O cadastro de endereço pode preencher logradouro, bairro, cidade e UF a partir do CEP.
 
 ## 2. Tecnologias utilizadas
-- Haskell + [Yesod](https://www.yesodweb.com/)
-- Persistent (ORM) + SQLite
-- Shakespearean Templates (Hamlet, Cassius, Lucius) – se Opção A
-- Stack (build) e Git/GitHub
+
+- Haskell e Yesod no backend
+- Persistent como ORM e SQLite como banco de dados
+- Hamlet para os templates HTML e Lucius para os estilos
+- Stack para dependências, build e execução
+- ViaCEP para consultar dados de endereço pelo CEP
 
 ## 3. Instruções de execução
+
+Instale o [Haskell Stack](https://docs.haskellstack.org/) e execute:
+
 ```bash
 git clone https://github.com/lealtais/hockey-store-yesod.git
 cd hockey-store-yesod
@@ -22,33 +23,30 @@ stack build
 stack exec hockey-store
 ```
 
-Depois acesse http://localhost:3000. Requer o [Haskell Stack](https://docs.haskellstack.org/) instalado; o primeiro build baixa o GHC e as dependências e demora.
+A aplicação fica disponível em <http://localhost:3000>. O primeiro build pode baixar o GHC e as dependências.
+
+O login normal usa OpenID. Para uma demonstração local com login fictício, crie um arquivo local `dev-auth.yml` com `auth-dummy-login: true` e execute `stack exec -- hockey-store dev-auth.yml`. Não versione esse arquivo de configuração.
 
 ## 4. Estrutura do banco de dados
-| # | Tabela | Campos principais | Relacionamentos / restrições |
-|---|--------|-------------------|------------------------------|
-| 1 | `Categoria` | `nome` | `nome` único |
-| 2 | `Marca` | `nome`, `pais` (opcional) | `nome` único |
-| 3 | `Produto` | `nome`, `descricao` (opcional), `preco` (em centavos), `estoque`, `categoriaId`, `marcaId` | FK → `Categoria`, `Marca` |
-| 4 | `Cliente` | `nome`, `email`, `telefone` (opcional), `userId` (opcional) | `email` único; FK → `User` (opcional) |
-| 5 | `Endereco` | `clienteId`, `cep`, `logradouro`, `numero`, `complemento` (opcional), `bairro`, `cidade`, `uf` | FK → `Cliente` |
-| 6 | `Pedido` | `clienteId`, `enderecoId` (opcional), `status` (`StatusPedido`: `Aberto`, `Pago`, `Enviado`, `Cancelado`; padrão `Aberto`), `total` (em centavos, padrão `0`), `criadoEm` | FK → `Cliente`, `Endereco` |
-| 7 | `ItemPedido` | `pedidoId`, `produtoId`, `quantidade`, `precoUnitario` (em centavos) | FK → `Pedido`, `Produto`; único (`pedidoId`, `produtoId`) |
+
+O domínio da loja possui sete tabelas. A autenticação do Yesod também mantém as tabelas auxiliares `User` e `Email`.
+
+| Tabela | Campos principais | Relacionamentos e restrições |
+|---|---|---|
+| `Categoria` | `nome` | Nome único |
+| `Marca` | `nome`, `pais` opcional | Nome único |
+| `Produto` | `nome`, `descricao`, `preco`, `estoque`, `categoriaId`, `marcaId` | FKs para `Categoria` e `Marca`; preço armazenado como `Int` em centavos |
+| `Cliente` | `nome`, `email`, `telefone`, `userId` | E-mail único; FK opcional para `User` |
+| `Endereco` | `clienteId`, `cep`, `logradouro`, `numero`, `complemento`, `bairro`, `cidade`, `uf` | FK para `Cliente` |
+| `Pedido` | `clienteId`, `enderecoId`, `status`, `total`, `criadoEm` | FK para `Cliente` e FK opcional para `Endereco`; status `Aberto`, `Pago`, `Enviado` ou `Cancelado`; total em centavos |
+| `ItemPedido` | `pedidoId`, `produtoId`, `quantidade`, `precoUnitario` | FKs para `Pedido` e `Produto`; combinação pedido/produto única; preço unitário em centavos |
+
+As tabelas são criadas e atualizadas pelas migrações do Persistent na inicialização do aplicativo.
 
 ## 5. Integração com API externa
-- **API:** ViaCEP (https://viacep.com.br)
-- **Finalidade:** preencher automaticamente o endereço de entrega do cliente a partir do CEP
+
+A aplicação consulta a API gratuita [ViaCEP](https://viacep.com.br), no endpoint `https://viacep.com.br/ws/{cep}/json/`. No formulário de endereço, a ação **Buscar CEP** consulta a API no servidor e preenche CEP, logradouro, bairro, cidade e UF antes de salvar o endereço do cliente. CEP inválido, inexistente e falhas na consulta são apresentados como mensagens para o usuário.
 
 ## 6. Integrantes
-| Nome | Conta GitHub | Principais contribuições |
-|------|--------------|--------------------------|
-| `TODO` | | |
 
-## 7. (Somente se REST) Endpoints
-| Método | Rota | Finalidade |
-|--------|------|-----------|
-| GET | `TODO` | |
-
-## Hospedagem (opcional)
-`TODO`
-
+Pendente: o grupo deve preencher os nomes, usuários GitHub e contribuições antes da entrega.
