@@ -20,3 +20,8 @@
 /produtos ProdutosR GET POST
 /produtos/#ProdutoId/editar ProdutoEditarR GET POST
 /produtos/#ProdutoId/excluir ProdutoExcluirR POST
+
+/clientes ClientesR GET POST
+/clientes/#ClienteId ClienteR GET
+/clientes/#ClienteId/editar ClienteEditarR GET POST
+/clientes/#ClienteId/excluir ClienteExcluirR POST

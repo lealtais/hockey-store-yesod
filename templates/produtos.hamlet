@@ -1,4 +1,10 @@
 <h1>Produtos
+<h2>Novo produto
+<form .store-form method=post action=@{ProdutosR} enctype=#{enctype}>
+  ^{widget}
+  <div .store-form-actions>
+    <button .btn .btn-primary type=submit>Salvar
+<h2>Produtos cadastrados
 <div .store-table-scroll role="region" aria-label="Tabela de produtos" tabindex="0">
     <table .table>
       <tr>
@@ -26,8 +32,3 @@
               $maybe token <- reqToken req
                 <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
               <button .btn .btn-danger .btn-xs type=submit>Excluir
-<h2>Novo produto
-<form .store-form method=post action=@{ProdutosR} enctype=#{enctype}>
-  ^{widget}
-  <div .store-form-actions>
-    <button .btn .btn-primary type=submit>Salvar

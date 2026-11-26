@@ -1,4 +1,10 @@
 <h1>Marcas
+<h2>Nova marca
+<form .store-form method=post action=@{MarcasR} enctype=#{enctype}>
+  ^{widget}
+  <div .store-form-actions>
+    <button .btn .btn-primary type=submit>Salvar
+<h2>Marcas cadastradas
 <div .store-table-scroll role="region" aria-label="Tabela de marcas" tabindex="0">
     <table .table>
       <tr>
@@ -18,8 +24,3 @@
               $maybe token <- reqToken req
                 <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
               <button .btn .btn-danger .btn-xs type=submit>Excluir
-<h2>Nova marca
-<form .store-form method=post action=@{MarcasR} enctype=#{enctype}>
-  ^{widget}
-  <div .store-form-actions>
-    <button .btn .btn-primary type=submit>Salvar
