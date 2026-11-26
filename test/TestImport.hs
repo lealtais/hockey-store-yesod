@@ -83,8 +83,10 @@ getTables = do
 -- Foundation.hs
 authenticateAs :: Entity User -> YesodExample App ()
 authenticateAs (Entity _ u) = do
+    get $ AuthR LoginR
     request $ do
         setMethod "POST"
+        addToken
         addPostParam "ident" $ userIdent u
         setUrl $ AuthR $ PluginR "dummy" []
 
