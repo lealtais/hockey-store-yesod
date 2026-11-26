@@ -131,6 +131,11 @@ instance Yesod App where
                     , menuItemRoute = MarcasR
                     , menuItemAccessCallback = isJust muser
                     }
+                , NavbarLeft $ MenuItem
+                    { menuItemLabel = "Clientes"
+                    , menuItemRoute = ClientesR
+                    , menuItemAccessCallback = isJust muser
+                    }
                 , NavbarRight $ MenuItem
                     { menuItemLabel = "Entrar"
                     , menuItemRoute = AuthR LoginR
@@ -190,6 +195,10 @@ instance Yesod App where
     isAuthorized ProdutosR _ = isAuthenticated
     isAuthorized (ProdutoEditarR _) _ = isAuthenticated
     isAuthorized (ProdutoExcluirR _) _ = isAuthenticated
+    isAuthorized ClientesR _ = isAuthenticated
+    isAuthorized (ClienteR _) _ = isAuthenticated
+    isAuthorized (ClienteEditarR _) _ = isAuthenticated
+    isAuthorized (ClienteExcluirR _) _ = isAuthenticated
     isAuthorized _ _ = return Authorized
 
     -- This function creates static content files in the static folder

@@ -1,0 +1,26 @@
+<h1>#{clienteNome cliente}
+<dl>
+    <dt>E-mail
+    <dd>#{clienteEmail cliente}
+    <dt>Telefone
+    <dd>#{fromMaybe "—" (clienteTelefone cliente)}
+<a .btn.btn-primary href=@{ClienteEditarR cid}>Editar cliente
+<a .btn.btn-default href=@{ClientesR}>Voltar à lista
+<h2>Endereços
+$if null enderecos
+    <p>Nenhum endereço cadastrado.
+$else
+    <ul>
+        $forall Entity _ endereco <- enderecos
+            <li>
+                #{enderecoLogradouro endereco}, #{enderecoNumero endereco}
+                $maybe complemento <- enderecoComplemento endereco
+                    (#{complemento})
+                — #{enderecoBairro endereco}, #{enderecoCidade endereco}/#{enderecoUf endereco} — CEP #{enderecoCep endereco}
+<h2>Pedidos
+$if null pedidos
+    <p>Nenhum pedido cadastrado.
+$else
+    <ul>
+        $forall Entity pedidoId pedido <- pedidos
+            <li>Pedido #{toPathPiece pedidoId} — #{show (pedidoStatus pedido)} — #{formatarPreco (pedidoTotal pedido)}

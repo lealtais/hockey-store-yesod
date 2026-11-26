@@ -1,0 +1,30 @@
+<h1>Clientes
+<div .table-responsive.store-table-scroll role="region" aria-label="Tabela de clientes" tabindex="0">
+    <table .table>
+        <thead>
+            <tr>
+                <th scope="col">Nome
+                <th scope="col">E-mail
+                <th scope="col">Telefone
+                <th scope="col">Ações
+        <tbody>
+            $if null clientes
+                <tr>
+                    <td .store-table-empty colspan="4">Nenhum cliente cadastrado.
+            $forall Entity cid cliente <- clientes
+                <tr>
+                    <td>
+                        <a href=@{ClienteR cid}>#{clienteNome cliente}
+                    <td>#{clienteEmail cliente}
+                    <td>#{fromMaybe "—" (clienteTelefone cliente)}
+                    <td>
+                        <a .btn.btn-default.btn-xs href=@{ClienteEditarR cid}>Editar
+                        <form method=post action=@{ClienteExcluirR cid} style="display:inline">
+                            $maybe token <- reqToken req
+                                <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
+                            <button .btn.btn-danger.btn-xs type=submit>Excluir
+<h2>Novo cliente
+<form .store-form method=post action=@{ClientesR} enctype=#{enctype}>
+    ^{widget}
+    <div .store-form-actions>
+        <button .btn.btn-primary type=submit>Salvar
