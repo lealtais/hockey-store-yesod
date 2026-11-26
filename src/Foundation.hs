@@ -112,13 +112,13 @@ instance Yesod App where
         -- Define the menu items of the header.
         let menuItems =
                 [ NavbarLeft $ MenuItem
-                    { menuItemLabel = "Home"
+                    { menuItemLabel = "Início"
                     , menuItemRoute = HomeR
                     , menuItemAccessCallback = True
                     }
                 , NavbarLeft $ MenuItem
-                    { menuItemLabel = "Profile"
-                    , menuItemRoute = ProfileR
+                    { menuItemLabel = "Produtos"
+                    , menuItemRoute = ProdutosR
                     , menuItemAccessCallback = isJust muser
                     }
                 , NavbarLeft $ MenuItem
@@ -131,18 +131,13 @@ instance Yesod App where
                     , menuItemRoute = MarcasR
                     , menuItemAccessCallback = isJust muser
                     }
-                , NavbarLeft $ MenuItem
-                    { menuItemLabel = "Produtos"
-                    , menuItemRoute = ProdutosR
-                    , menuItemAccessCallback = isJust muser
-                    }
                 , NavbarRight $ MenuItem
-                    { menuItemLabel = "Login"
+                    { menuItemLabel = "Entrar"
                     , menuItemRoute = AuthR LoginR
                     , menuItemAccessCallback = isNothing muser
                     }
                 , NavbarRight $ MenuItem
-                    { menuItemLabel = "Logout"
+                    { menuItemLabel = "Sair"
                     , menuItemRoute = AuthR LogoutR
                     , menuItemAccessCallback = isJust muser
                     }

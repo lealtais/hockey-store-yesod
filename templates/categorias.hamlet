@@ -1,18 +1,23 @@
 <h1>Categorias
-<table .table>
-  <tr>
-    <th>Nome
-    <th>Ações
-  $forall Entity cid c <- categorias
-    <tr>
-      <td>#{categoriaNome c}
-      <td>
-        <a .btn .btn-default .btn-xs href=@{CategoriaEditarR cid}>Editar
-        <form method=post action=@{CategoriaExcluirR cid} style="display:inline">
-          $maybe token <- reqToken req
-            <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
-          <button .btn .btn-danger .btn-xs type=submit>Excluir
+<div .store-table-scroll role="region" aria-label="Tabela de categorias" tabindex="0">
+    <table .table>
+      <tr>
+        <th>Nome
+        <th>Ações
+      $if null categorias
+        <tr>
+          <td .store-table-empty colspan="2">Nenhuma categoria cadastrada.
+      $forall Entity cid c <- categorias
+        <tr>
+          <td>#{categoriaNome c}
+          <td>
+            <a .btn .btn-default .btn-xs href=@{CategoriaEditarR cid}>Editar
+            <form method=post action=@{CategoriaExcluirR cid} style="display:inline">
+              $maybe token <- reqToken req
+                <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
+              <button .btn .btn-danger .btn-xs type=submit>Excluir
 <h2>Nova categoria
-<form method=post action=@{CategoriasR} enctype=#{enctype}>
+<form .store-form method=post action=@{CategoriasR} enctype=#{enctype}>
   ^{widget}
-  <button .btn .btn-primary type=submit>Salvar
+  <div .store-form-actions>
+    <button .btn .btn-primary type=submit>Salvar

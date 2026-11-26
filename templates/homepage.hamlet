@@ -1,2 +1,32 @@
-<h1>Hockey Store
-<p>Equipamentos de hockey: tacos, patins, capacetes, luvas e proteções.
+<section .store-hero aria-labelledby="store-title">
+    <div .store-hero-copy>
+        <h1 #store-title>Equipamentos de hockey no gelo
+        <p>Tacos, patins e proteção para o treino e o dia de jogo.
+        $if isJust usuario
+            <a .store-hero-action href=@{ProdutosR}>
+                Ver produtos
+                <span aria-hidden="true">→
+        $else
+            <a .store-hero-action href=@{AuthR LoginR}>
+                Entrar para ver produtos
+                <span aria-hidden="true">→
+    <img .store-hero-photo src=@{fotoHockey} width="1536" height="1024" fetchpriority="high" alt="Jogador de hockey manobra o disco enquanto patina no gelo">
+$if isJust usuario
+    <section .store-shortcuts aria-labelledby="catalogo-title">
+        <h2 #catalogo-title>Gerenciar catálogo
+        <ul .store-shortcut-grid>
+            <li>
+                <a href=@{ProdutosR}>
+                    <strong>Produtos
+                    <span>Consulte preços e estoque
+                    <span .store-shortcut-arrow aria-hidden="true">↗
+            <li>
+                <a href=@{CategoriasR}>
+                    <strong>Categorias
+                    <span>Organize os equipamentos por tipo
+                    <span .store-shortcut-arrow aria-hidden="true">↗
+            <li>
+                <a href=@{MarcasR}>
+                    <strong>Marcas
+                    <span>Consulte as marcas do catálogo
+                    <span .store-shortcut-arrow aria-hidden="true">↗

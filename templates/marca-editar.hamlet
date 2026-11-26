@@ -1,5 +1,6 @@
 <h1>Editar marca
-<form method=post enctype=#{enctype}>
+<form .store-form method=post enctype=#{enctype}>
   ^{widget}
-  <button .btn .btn-primary type=submit>Atualizar
-  <a .btn .btn-default href=@{MarcasR}>Voltar
+  <div .store-form-actions>
+    <button .btn .btn-primary type=submit>Atualizar
+    <a .btn .btn-default href=@{MarcasR}>Voltar
