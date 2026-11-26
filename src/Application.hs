@@ -48,6 +48,7 @@ import Handler.Marca
 import Handler.Produto
 import Handler.Cliente
 import Handler.Pedido
+import Seed
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
@@ -86,7 +87,7 @@ makeFoundation appSettings = do
         (sqlPoolSize $ appDatabaseConf appSettings)
 
     -- Perform database migration using our application's logging settings.
-    runLoggingT (runSqlPool (runMigration migrateAll) pool) logFunc
+    runLoggingT (runSqlPool (runMigration migrateAll >> semear) pool) logFunc
 
     -- Return the foundation
     return $ mkFoundation pool
