@@ -1,4 +1,10 @@
 <h1>Pedidos
+<h2>Novo pedido
+<form .store-form method=post action=@{PedidosR} enctype=#{enctype}>
+    ^{widget}
+    <div .store-form-actions>
+        <button .btn.btn-primary type=submit>Criar pedido
+<h2>Pedidos cadastrados
 <div .table-responsive.store-table-scroll role="region" aria-label="Tabela de pedidos" tabindex="0">
     <table .table>
         <thead>
@@ -18,8 +24,3 @@
                     <td>#{nome}
                     <td>#{show (pedidoStatus pedido)}
                     <td>#{formatarPreco (pedidoTotal pedido)}
-<h2>Novo pedido
-<form .store-form method=post action=@{PedidosR} enctype=#{enctype}>
-    ^{widget}
-    <div .store-form-actions>
-        <button .btn.btn-primary type=submit>Criar pedido
