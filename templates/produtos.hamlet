@@ -1,28 +1,33 @@
 <h1>Produtos
-<table .table>
-  <tr>
-    <th>Nome
-    <th>Descrição
-    <th>Categoria
-    <th>Marca
-    <th>Preço
-    <th>Estoque
-    <th>Ações
-  $forall (Entity pid p, mc, mm) <- linhas
-    <tr>
-      <td>#{produtoNome p}
-      <td>#{fromMaybe "-" (produtoDescricao p)}
-      <td>#{maybe "-" categoriaNome mc}
-      <td>#{maybe "-" marcaNome mm}
-      <td>#{formatarPreco (produtoPreco p)}
-      <td>#{show (produtoEstoque p)}
-      <td>
-        <a .btn .btn-default .btn-xs href=@{ProdutoEditarR pid}>Editar
-        <form method=post action=@{ProdutoExcluirR pid} style="display:inline">
-          $maybe token <- reqToken req
-            <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
-          <button .btn .btn-danger .btn-xs type=submit>Excluir
+<div .store-table-scroll role="region" aria-label="Tabela de produtos" tabindex="0">
+    <table .table>
+      <tr>
+        <th>Nome
+        <th>Descrição
+        <th>Categoria
+        <th>Marca
+        <th>Preço
+        <th>Estoque
+        <th>Ações
+      $if null linhas
+        <tr>
+          <td .store-table-empty colspan="7">Nenhum produto cadastrado.
+      $forall (Entity pid p, mc, mm) <- linhas
+        <tr>
+          <td>#{produtoNome p}
+          <td>#{fromMaybe "-" (produtoDescricao p)}
+          <td>#{maybe "-" categoriaNome mc}
+          <td>#{maybe "-" marcaNome mm}
+          <td>#{formatarPreco (produtoPreco p)}
+          <td>#{show (produtoEstoque p)}
+          <td>
+            <a .btn .btn-default .btn-xs href=@{ProdutoEditarR pid}>Editar
+            <form method=post action=@{ProdutoExcluirR pid} style="display:inline">
+              $maybe token <- reqToken req
+                <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
+              <button .btn .btn-danger .btn-xs type=submit>Excluir
 <h2>Novo produto
-<form method=post action=@{ProdutosR} enctype=#{enctype}>
+<form .store-form method=post action=@{ProdutosR} enctype=#{enctype}>
   ^{widget}
-  <button .btn .btn-primary type=submit>Salvar
+  <div .store-form-actions>
+    <button .btn .btn-primary type=submit>Salvar

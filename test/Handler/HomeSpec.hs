@@ -10,4 +10,4 @@ spec = withApp $ do
         it "carrega a pagina inicial" $ do
             get HomeR
             statusIs 200
-            htmlAnyContain "h1" "Hockey Store"
+            htmlAnyContain "h1" "Equipamentos de hockey no gelo"

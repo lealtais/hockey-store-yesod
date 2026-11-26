@@ -1,3 +1,126 @@
-h1 {
-    margin-top: 2em;
+.store-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 47fr) minmax(0, 53fr);
+    overflow: hidden;
+    min-height: 480px;
+    border-radius: 22px;
+    background: var(--store-navy);
+    color: var(--store-surface);
+}
+
+.store-hero-copy {
+    align-self: center;
+    padding: clamp(26px, 5vw, 68px);
+}
+
+.store-hero h1 {
+    margin: 0 0 18px;
+    font-family: Bahnschrift, "Segoe UI", system-ui, sans-serif;
+    font-size: clamp(38px, 5vw, 70px);
+    font-weight: 750;
+    line-height: 1.02;
+    letter-spacing: -0.055em;
+    text-wrap: balance;
+}
+
+.store-hero p {
+    max-width: 33ch;
+    margin: 0 0 28px;
+    color: #cae0f3;
+    font-size: 18px;
+}
+
+.store-hero-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 48px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: var(--store-accent);
+    color: var(--store-navy);
+    font-weight: 700;
+}
+
+.store-hero-action:hover,
+.store-hero-action:focus {
+    background: var(--store-surface);
+    color: var(--store-navy);
+    text-decoration: none;
+}
+
+.store-hero-action:focus-visible {
+    outline-color: var(--store-accent);
+}
+
+.store-hero-photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: cover;
+    object-position: 63% center;
+}
+
+.store-shortcuts {
+    margin-top: 38px;
+}
+
+.store-shortcuts h2 {
+    margin: 0 0 16px;
+    font-size: 25px;
+    font-weight: 750;
+    letter-spacing: -0.025em;
+}
+
+.store-shortcut-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.store-shortcut-grid a {
+    position: relative;
+    display: grid;
+    gap: 4px;
+    height: 100%;
+    padding: 18px 44px 18px 18px;
+    border: 1px solid var(--store-line);
+    border-radius: var(--store-radius);
+    background: var(--store-surface);
+    color: var(--store-muted);
+    font-size: 15px;
+}
+
+.store-shortcut-grid a:hover {
+    border-color: var(--store-link);
+    text-decoration: none;
+}
+
+.store-shortcut-grid strong {
+    color: var(--store-link);
+    font-size: 18px;
+}
+
+.store-shortcut-arrow {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    color: var(--store-link);
+}
+
+@media (max-width: 767px) {
+    .store-hero {
+        grid-template-columns: minmax(0, 1fr);
+        min-height: 0;
+        border-radius: 16px;
+    }
+
+    .store-hero-photo {
+        height: auto;
+        aspect-ratio: 3 / 2;
+    }
 }

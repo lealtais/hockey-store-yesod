@@ -1,50 +1,25 @@
-
-<!-- Static navbar -->
-<nav .navbar.navbar-default.navbar-static-top>
-    <div .container>
-        <div .navbar-header>
-            <button type="button" .navbar-toggle.collapsed data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation
-                <span class="icon-bar">
-                <span class="icon-bar">
-                <span class="icon-bar">
-
-        <div #navbar .collapse.navbar-collapse>
-            <ul .nav.navbar-nav>
+<a .store-skip href="#conteudo">Ir para o conteúdo
+<header .store-header>
+    <div .container.store-nav-inner>
+        <a .store-brand href=@{HomeR}>
+            <span .store-brand-mark aria-hidden="true">H
+            <span>Hockey Store
+        <nav .store-nav aria-label="Navegação principal">
+            <ul .store-nav-links>
                 $forall MenuItem label route _ <- navbarLeftFilteredMenuItems
-                    <li :Just route == mcurrentRoute:.active>
-                        <a href="@{route}">#{label}
-
-            <ul .nav.navbar-nav.navbar-right>
+                    <li>
+                        <a href=@{route} :Just route == mcurrentRoute:aria-current="page">#{label}
+            <ul .store-nav-links.store-nav-account>
                 $forall MenuItem label route _ <- navbarRightFilteredMenuItems
-                    <li :Just route == mcurrentRoute:.active>
-                        <a href="@{route}">#{label}
-
-<!-- Page Contents -->
-
-<div .container>
-    $if not $ Just HomeR == mcurrentRoute
-        <ul .breadcrumb>
-            $forall bc <- parents
+                    <li>
+                        <a href=@{route}>#{label}
+<main #conteudo .container.store-main tabindex="-1">
+    $if not (null parents)
+        <ol .breadcrumb aria-label="Você está aqui">
+            $forall (route, label) <- parents
                 <li>
-                    <a href="@{fst bc}">#{snd bc}
-
-            <li .active>#{title}
-
+                    <a href=@{route}>#{label}
+            <li .active aria-current="page">#{title}
     $maybe msg <- mmsg
-      <div .alert.alert-info #message>#{msg}
-
-
-$if (Just HomeR == mcurrentRoute)
+        <div #message .alert.alert-info role="status">#{msg}
     ^{widget}
-$else
-    <div .container>
-        <div .row>
-            <div .col-md-12>
-                ^{widget}
-
-<!-- Footer -->
-<footer .footer>
-    <div .container>
-        <p .text-muted>
-            #{appCopyright $ appSettings master}

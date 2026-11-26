@@ -1,20 +1,25 @@
 <h1>Marcas
-<table .table>
-  <tr>
-    <th>Nome
-    <th>País
-    <th>Ações
-  $forall Entity mid m <- marcas
-    <tr>
-      <td>#{marcaNome m}
-      <td>#{fromMaybe "-" (marcaPais m)}
-      <td>
-        <a .btn .btn-default .btn-xs href=@{MarcaEditarR mid}>Editar
-        <form method=post action=@{MarcaExcluirR mid} style="display:inline">
-          $maybe token <- reqToken req
-            <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
-          <button .btn .btn-danger .btn-xs type=submit>Excluir
+<div .store-table-scroll role="region" aria-label="Tabela de marcas" tabindex="0">
+    <table .table>
+      <tr>
+        <th>Nome
+        <th>País
+        <th>Ações
+      $if null marcas
+        <tr>
+          <td .store-table-empty colspan="3">Nenhuma marca cadastrada.
+      $forall Entity mid m <- marcas
+        <tr>
+          <td>#{marcaNome m}
+          <td>#{fromMaybe "-" (marcaPais m)}
+          <td>
+            <a .btn .btn-default .btn-xs href=@{MarcaEditarR mid}>Editar
+            <form method=post action=@{MarcaExcluirR mid} style="display:inline">
+              $maybe token <- reqToken req
+                <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
+              <button .btn .btn-danger .btn-xs type=submit>Excluir
 <h2>Nova marca
-<form method=post action=@{MarcasR} enctype=#{enctype}>
+<form .store-form method=post action=@{MarcasR} enctype=#{enctype}>
   ^{widget}
-  <button .btn .btn-primary type=submit>Salvar
+  <div .store-form-actions>
+    <button .btn .btn-primary type=submit>Salvar

@@ -8,6 +8,9 @@ module Handler.Home where
 import Import
 
 getHomeR :: Handler Html
-getHomeR = defaultLayout $ do
-    setTitle "Hockey Store"
-    $(widgetFile "homepage")
+getHomeR = do
+    usuario <- maybeAuthId
+    let fotoHockey = StaticR (StaticRoute ["img", "hockey-hero.jpg"] [])
+    defaultLayout $ do
+        setTitle "Hockey Store"
+        $(widgetFile "homepage")
