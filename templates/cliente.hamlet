@@ -23,4 +23,6 @@ $if null pedidos
 $else
     <ul>
         $forall Entity pedidoId pedido <- pedidos
-            <li>Pedido #{toPathPiece pedidoId} — #{show (pedidoStatus pedido)} — #{formatarPreco (pedidoTotal pedido)}
+            <li>
+                <a href=@{PedidoR pedidoId}>Pedido #{toPathPiece pedidoId}
+                — #{show (pedidoStatus pedido)} — #{formatarPreco (pedidoTotal pedido)}

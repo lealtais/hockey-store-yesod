@@ -1,0 +1,71 @@
+<h1>Pedido #{toPathPiece pid}
+<dl>
+    <dt>Cliente
+    <dd>
+        <a href=@{ClienteR (pedidoClienteId pedido)}>#{clienteNome cliente}
+    <dt>Status
+    <dd>#{show (pedidoStatus pedido)}
+    <dt>Total
+    <dd>#{formatarPreco (pedidoTotal pedido)}
+    <dt>Endereço de entrega
+    $maybe selecionado <- endereco
+        <dd>#{rotuloEndereco selecionado}
+    $nothing
+        <dd>Nenhum endereço selecionado.
+<a .btn.btn-default href=@{PedidosR}>Voltar à lista
+
+<h2>Itens do pedido
+<div .table-responsive.store-table-scroll role="region" aria-label="Itens do pedido" tabindex="0">
+    <table .table>
+        <thead>
+            <tr>
+                <th scope="col">Produto
+                <th scope="col">Quantidade
+                <th scope="col">Preço unitário
+                $if aberto
+                    <th scope="col">Ações
+        <tbody>
+            $if null itens
+                <tr>
+                    <td .store-table-empty colspan=#{colunasItens}>Nenhum item no pedido.
+            $forall (iid, item, nome) <- itens
+                <tr>
+                    <td>#{nome}
+                    <td>#{show (itemPedidoQuantidade item)}
+                    <td>#{formatarPreco (itemPedidoPrecoUnitario item)}
+                    $if aberto
+                        <td>
+                            <form method=post action=@{PedidoItemRemoverR pid iid}>
+                                $maybe token <- tokenCsrf
+                                    <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
+                                <button .btn.btn-default.btn-xs type=submit>Remover
+$if aberto
+    <h2>Adicionar item
+    <form .store-form method=post action=@{PedidoItensR pid} enctype=#{itemEnctype}>
+        ^{itemWidget}
+        <div .store-form-actions>
+            <button .btn.btn-primary type=submit>Adicionar item
+    <h2>Selecionar endereço
+    $if temEnderecos
+        <form .store-form method=post action=@{PedidoEnderecoR pid} enctype=#{enderecoEnctype}>
+            ^{enderecoWidget}
+            <div .store-form-actions>
+                <button .btn.btn-default type=submit>Usar endereço
+    $else
+        <p>
+            O cliente ainda não tem endereço cadastrado.
+            <a href=@{ClienteR (pedidoClienteId pedido)}>Abrir ficha do cliente
+    <h2>Ações do pedido
+    <div .store-form-actions>
+        <form method=post action=@{PedidoFinalizarR pid}>
+            $maybe token <- tokenCsrf
+                <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
+            <button .btn.btn-primary type=submit>Finalizar pedido
+        <form method=post action=@{PedidoCancelarR pid}>
+            $maybe token <- tokenCsrf
+                <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
+            <button .btn.btn-default type=submit>Cancelar pedido
+        <form method=post action=@{PedidoExcluirR pid}>
+            $maybe token <- tokenCsrf
+                <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
+            <button .btn.btn-danger type=submit>Excluir pedido

@@ -25,3 +25,12 @@
 /clientes/#ClienteId ClienteR GET
 /clientes/#ClienteId/editar ClienteEditarR GET POST
 /clientes/#ClienteId/excluir ClienteExcluirR POST
+
+/pedidos PedidosR GET POST
+/pedidos/#PedidoId PedidoR GET
+/pedidos/#PedidoId/itens PedidoItensR POST
+/pedidos/#PedidoId/itens/#ItemPedidoId/remover PedidoItemRemoverR POST
+/pedidos/#PedidoId/endereco PedidoEnderecoR POST
+/pedidos/#PedidoId/finalizar PedidoFinalizarR POST
+/pedidos/#PedidoId/cancelar PedidoCancelarR POST
+/pedidos/#PedidoId/excluir PedidoExcluirR POST

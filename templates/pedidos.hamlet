@@ -1,0 +1,25 @@
+<h1>Pedidos
+<div .table-responsive.store-table-scroll role="region" aria-label="Tabela de pedidos" tabindex="0">
+    <table .table>
+        <thead>
+            <tr>
+                <th scope="col">Pedido
+                <th scope="col">Cliente
+                <th scope="col">Status
+                <th scope="col">Total
+        <tbody>
+            $if null pedidos
+                <tr>
+                    <td .store-table-empty colspan="4">Nenhum pedido cadastrado.
+            $forall (pid, pedido, nome) <- pedidos
+                <tr>
+                    <td>
+                        <a href=@{PedidoR pid}>Pedido #{toPathPiece pid}
+                    <td>#{nome}
+                    <td>#{show (pedidoStatus pedido)}
+                    <td>#{formatarPreco (pedidoTotal pedido)}
+<h2>Novo pedido
+<form .store-form method=post action=@{PedidosR} enctype=#{enctype}>
+    ^{widget}
+    <div .store-form-actions>
+        <button .btn.btn-primary type=submit>Criar pedido
