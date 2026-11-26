@@ -5,6 +5,7 @@
 {-# LANGUAGE TypeFamilies #-}
 module Handler.Categoria where
 
+import Handler.Common (mensagemErro, mensagemSucesso)
 import Import
 
 categoriaForm :: Maybe Categoria -> Form Categoria
@@ -30,8 +31,8 @@ postCategoriasR = do
         FormSuccess c -> do
             r <- runDB $ insertUnique c
             case r of
-                Just _ -> setMessage "Categoria criada com sucesso"
-                Nothing -> setMessage "Já existe uma categoria com esse nome"
+                Just _ -> mensagemSucesso "Categoria criada com sucesso"
+                Nothing -> mensagemErro "Já existe uma categoria com esse nome"
             redirect CategoriasR
         _ -> do
             req <- getRequest
@@ -57,13 +58,13 @@ postCategoriaEditarR cid = do
             existente <- runDB $ getBy (UniqueCategoria (categoriaNome novo))
             case existente of
                 Just (Entity eid _) | eid /= cid -> do
-                    setMessage "Já existe uma categoria com esse nome"
+                    mensagemErro "Já existe uma categoria com esse nome"
                     defaultLayout $ do
                         setTitle "Editar categoria - Hockey Store"
                         $(widgetFile "categoria-editar")
                 _ -> do
                     runDB $ replace cid novo
-                    setMessage "Categoria atualizada"
+                    mensagemSucesso "Categoria atualizada"
                     redirect CategoriasR
         _ -> defaultLayout $ do
             setTitle "Editar categoria - Hockey Store"
@@ -71,10 +72,12 @@ postCategoriaEditarR cid = do
 
 postCategoriaExcluirR :: CategoriaId -> Handler Html
 postCategoriaExcluirR cid = do
-    emUso <- runDB $ count [ProdutoCategoriaId ==. cid]
+    emUso <- runDB $ do
+        _ <- get404 cid
+        count [ProdutoCategoriaId ==. cid]
     if emUso > 0
-        then setMessage "Não é possível excluir: existem produtos nesta categoria"
+        then mensagemErro "Não é possível excluir: existem produtos nesta categoria"
         else do
             runDB $ delete cid
-            setMessage "Categoria excluída"
+            mensagemSucesso "Categoria excluída"
     redirect CategoriasR

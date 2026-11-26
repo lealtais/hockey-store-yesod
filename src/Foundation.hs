@@ -1,6 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE ViewPatterns #-}
@@ -171,6 +172,18 @@ instance Yesod App where
             $(widgetFile "default-layout")
         withUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
 
+    errorHandler NotFound = renderErro "Página não encontrada"
+        "A página ou o registro solicitado não está disponível."
+    errorHandler (PermissionDenied _) = renderErro "Acesso negado"
+        "Você não pode concluir esta ação. Volte à página anterior e tente novamente."
+    errorHandler (InvalidArgs _) = renderErro "Solicitação inválida"
+        "Confira os dados da solicitação e tente novamente."
+    errorHandler (BadMethod _) = renderErro "Ação indisponível"
+        "Esta página não aceita a ação solicitada."
+    errorHandler (InternalError _) = renderErro "Erro inesperado"
+        "Não foi possível concluir a solicitação. Tente novamente mais tarde."
+    errorHandler outro = defaultErrorHandler outro
+
     -- The page to be redirected to when authentication is required.
     authRoute
         :: App
@@ -249,6 +262,15 @@ instance Yesod App where
 
     makeLogger :: App -> IO Logger
     makeLogger = return . appLogger
+
+renderErro :: Text -> Text -> Handler TypedContent
+renderErro titulo descricao = fmap toTypedContent $ defaultLayout $ do
+    setTitle (toHtml titulo)
+    [whamlet|
+        <h1>#{titulo}
+        <p>#{descricao}
+        <a .btn.btn-primary href=@{HomeR}>Voltar ao início
+    |]
 
 -- Define breadcrumbs.
 instance YesodBreadcrumbs App where

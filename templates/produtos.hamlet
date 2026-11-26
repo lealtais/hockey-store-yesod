@@ -28,7 +28,7 @@
           <td>#{show (produtoEstoque p)}
           <td>
             <a .btn .btn-default .btn-xs href=@{ProdutoEditarR pid}>Editar
-            <form method=post action=@{ProdutoExcluirR pid} style="display:inline">
+            <form method=post action=@{ProdutoExcluirR pid} onsubmit="return confirm('Tem certeza que deseja excluir?')" style="display:inline">
               $maybe token <- reqToken req
                 <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
               <button .btn .btn-danger .btn-xs type=submit>Excluir

@@ -5,6 +5,7 @@
 {-# LANGUAGE TypeFamilies #-}
 module Handler.Marca where
 
+import Handler.Common (mensagemErro, mensagemSucesso)
 import Import
 
 marcaForm :: Maybe Marca -> Form Marca
@@ -31,8 +32,8 @@ postMarcasR = do
         FormSuccess m -> do
             r <- runDB $ insertUnique m
             case r of
-                Just _ -> setMessage "Marca criada com sucesso"
-                Nothing -> setMessage "Já existe uma marca com esse nome"
+                Just _ -> mensagemSucesso "Marca criada com sucesso"
+                Nothing -> mensagemErro "Já existe uma marca com esse nome"
             redirect MarcasR
         _ -> do
             req <- getRequest
@@ -58,13 +59,13 @@ postMarcaEditarR mid = do
             existente <- runDB $ getBy (UniqueMarca (marcaNome novo))
             case existente of
                 Just (Entity eid _) | eid /= mid -> do
-                    setMessage "Já existe uma marca com esse nome"
+                    mensagemErro "Já existe uma marca com esse nome"
                     defaultLayout $ do
                         setTitle "Editar marca - Hockey Store"
                         $(widgetFile "marca-editar")
                 _ -> do
                     runDB $ replace mid novo
-                    setMessage "Marca atualizada"
+                    mensagemSucesso "Marca atualizada"
                     redirect MarcasR
         _ -> defaultLayout $ do
             setTitle "Editar marca - Hockey Store"
@@ -72,10 +73,12 @@ postMarcaEditarR mid = do
 
 postMarcaExcluirR :: MarcaId -> Handler Html
 postMarcaExcluirR mid = do
-    emUso <- runDB $ count [ProdutoMarcaId ==. mid]
+    emUso <- runDB $ do
+        _ <- get404 mid
+        count [ProdutoMarcaId ==. mid]
     if emUso > 0
-        then setMessage "Não é possível excluir: existem produtos desta marca"
+        then mensagemErro "Não é possível excluir: existem produtos desta marca"
         else do
             runDB $ delete mid
-            setMessage "Marca excluída"
+            mensagemSucesso "Marca excluída"
     redirect MarcasR

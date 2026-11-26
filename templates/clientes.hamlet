@@ -25,7 +25,7 @@
                     <td>#{fromMaybe "—" (clienteTelefone cliente)}
                     <td>
                         <a .btn.btn-default.btn-xs href=@{ClienteEditarR cid}>Editar
-                        <form method=post action=@{ClienteExcluirR cid} style="display:inline">
+                        <form method=post action=@{ClienteExcluirR cid} onsubmit="return confirm('Tem certeza que deseja excluir?')" style="display:inline">
                             $maybe token <- reqToken req
                                 <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
                             <button .btn.btn-danger.btn-xs type=submit>Excluir

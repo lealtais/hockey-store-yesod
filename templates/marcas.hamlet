@@ -20,7 +20,7 @@
           <td>#{fromMaybe "-" (marcaPais m)}
           <td>
             <a .btn .btn-default .btn-xs href=@{MarcaEditarR mid}>Editar
-            <form method=post action=@{MarcaExcluirR mid} style="display:inline">
+            <form method=post action=@{MarcaExcluirR mid} onsubmit="return confirm('Tem certeza que deseja excluir?')" style="display:inline">
               $maybe token <- reqToken req
                 <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
               <button .btn .btn-danger .btn-xs type=submit>Excluir

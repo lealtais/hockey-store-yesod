@@ -6,6 +6,7 @@
 module Handler.Cliente where
 
 import Handler.Produto (formatarPreco)
+import Handler.Common (mensagemErro, mensagemSucesso)
 import Import
 
 clienteForm :: Maybe Cliente -> Form Cliente
@@ -36,10 +37,10 @@ postClientesR = do
             inserido <- runDB $ insertUnique cliente
             case inserido of
                 Just cid -> do
-                    setMessage "Cliente criado com sucesso"
+                    mensagemSucesso "Cliente criado com sucesso"
                     redirect (ClienteR cid)
                 Nothing -> do
-                    setMessage "Já existe cliente com esse e-mail"
+                    mensagemErro "Já existe cliente com esse e-mail"
                     renderClientes widget enctype
         _ -> renderClientes widget enctype
 
@@ -85,10 +86,10 @@ postClienteEditarR cid = do
                         pure True
             if atualizado
                 then do
-                    setMessage "Cliente atualizado com sucesso"
+                    mensagemSucesso "Cliente atualizado com sucesso"
                     redirect (ClienteR cid)
                 else do
-                    setMessage "Já existe cliente com esse e-mail"
+                    mensagemErro "Já existe cliente com esse e-mail"
                     renderClienteEditar cid widget enctype
         _ -> renderClienteEditar cid widget enctype
 
@@ -104,6 +105,6 @@ postClienteExcluirR cid = do
                 delete cid
                 pure True
     if excluido
-        then setMessage "Cliente excluído com sucesso"
-        else setMessage "Cliente possui pedidos"
+        then mensagemSucesso "Cliente excluído com sucesso"
+        else mensagemErro "Cliente possui pedidos"
     redirect ClientesR

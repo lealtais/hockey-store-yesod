@@ -65,7 +65,7 @@ $if aberto
             $maybe token <- tokenCsrf
                 <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
             <button .btn.btn-default type=submit>Cancelar pedido
-        <form method=post action=@{PedidoExcluirR pid}>
+        <form method=post action=@{PedidoExcluirR pid} onsubmit="return confirm('Tem certeza que deseja excluir?')">
             $maybe token <- tokenCsrf
                 <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
             <button .btn.btn-danger type=submit>Excluir pedido
