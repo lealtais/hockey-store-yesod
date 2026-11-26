@@ -7,16 +7,22 @@
 <a .btn.btn-primary href=@{ClienteEditarR cid}>Editar cliente
 <a .btn.btn-default href=@{ClientesR}>Voltar à lista
 <h2>Endereços
+<a .btn.btn-primary href=@{EnderecoNovoR cid}>Novo endereço
 $if null enderecos
     <p>Nenhum endereço cadastrado.
 $else
     <ul>
-        $forall Entity _ endereco <- enderecos
+        $forall Entity enderecoId endereco <- enderecos
             <li>
                 #{enderecoLogradouro endereco}, #{enderecoNumero endereco}
                 $maybe complemento <- enderecoComplemento endereco
                     (#{complemento})
                 — #{enderecoBairro endereco}, #{enderecoCidade endereco}/#{enderecoUf endereco} — CEP #{enderecoCep endereco}
+                <a .btn.btn-default.btn-xs href=@{EnderecoEditarR enderecoId}>Editar
+                <form method=post action=@{EnderecoExcluirR enderecoId} onsubmit="return confirm('Tem certeza que deseja excluir este endereço?')" style="display:inline">
+                    $maybe token <- reqToken req
+                        <input type=hidden name=#{defaultCsrfParamName} value=#{token}>
+                    <button .btn.btn-danger.btn-xs type=submit>Excluir
 <h2>Pedidos
 $if null pedidos
     <p>Nenhum pedido cadastrado.

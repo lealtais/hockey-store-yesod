@@ -1,0 +1,7 @@
+<h1>#{titulo}
+<form .store-form method=post action=@{action} enctype=#{enctype}>
+    ^{widget}
+    <div .store-form-actions>
+        <button .btn.btn-default type=submit name=buscar value=1>Buscar CEP
+        <button .btn.btn-primary type=submit>Salvar
+        <a .btn.btn-default href=@{voltar}>Voltar

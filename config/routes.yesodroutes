@@ -25,6 +25,9 @@
 /clientes/#ClienteId ClienteR GET
 /clientes/#ClienteId/editar ClienteEditarR GET POST
 /clientes/#ClienteId/excluir ClienteExcluirR POST
+/clientes/#ClienteId/enderecos/novo EnderecoNovoR GET POST
+/enderecos/#EnderecoId/editar EnderecoEditarR GET POST
+/enderecos/#EnderecoId/excluir EnderecoExcluirR POST
 
 /pedidos PedidosR GET POST
 /pedidos/#PedidoId PedidoR GET
