@@ -35,6 +35,33 @@ renderEditarEndereco eid cid widget enctype =
     renderEnderecoForm "Editar endereço - Hockey Store"
         (EnderecoEditarR eid) (ClienteR cid) widget enctype
 
+lerRascunhoEndereco :: ClienteId -> Maybe Endereco -> Handler Endereco
+lerRascunhoEndereco cid base = do
+    cep <- fromMaybe (maybe "" enderecoCep base) <$> lookupPostParam "f1"
+    logradouro <- fromMaybe (maybe "" enderecoLogradouro base) <$> lookupPostParam "f2"
+    numero <- fromMaybe (maybe "" enderecoNumero base) <$> lookupPostParam "f3"
+    complemento <- lookupPostParam "f4"
+    bairro <- fromMaybe (maybe "" enderecoBairro base) <$> lookupPostParam "f5"
+    cidade <- fromMaybe (maybe "" enderecoCidade base) <$> lookupPostParam "f6"
+    uf <- fromMaybe (maybe "" enderecoUf base) <$> lookupPostParam "f7"
+    pure $ Endereco cid cep logradouro numero (complementoNaoVazio complemento) bairro cidade uf
+
+preencherComViaCep :: ClienteId -> Endereco -> Handler (Either Text Endereco)
+preencherComViaCep cid rascunho = do
+    app <- getYesod
+    resposta <- liftIO $ buscarCep (appHttpManager app) (enderecoCep rascunho)
+    pure $ case resposta of
+        Left erro -> Left erro
+        Right dados ->
+            Right $ Endereco cid
+                (viaCepCep dados)
+                (viaCepLogradouro dados)
+                (enderecoNumero rascunho)
+                (enderecoComplemento rascunho)
+                (viaCepBairro dados)
+                (viaCepLocalidade dados)
+                (viaCepUf dados)
+
 getEnderecoNovoR :: ClienteId -> Handler Html
 getEnderecoNovoR cid = do
     _ <- runDB $ get404 cid
@@ -44,37 +71,26 @@ getEnderecoNovoR cid = do
 postEnderecoNovoR :: ClienteId -> Handler Html
 postEnderecoNovoR cid = do
     _ <- runDB $ get404 cid
-    ((resultado, widget), enctype) <- runFormPost (enderecoForm cid Nothing)
     buscar <- lookupPostParam "buscar"
     case buscar of
         Just _ -> do
-            cep <- fromMaybe "" <$> lookupPostParam "f1"
-            numero <- fromMaybe "" <$> lookupPostParam "f3"
-            complemento <- lookupPostParam "f4"
-            app <- getYesod
-            resposta <- liftIO $ buscarCep (appHttpManager app) cep
-            case resposta of
+            rascunho <- lerRascunhoEndereco cid Nothing
+            resultadoBusca <- preencherComViaCep cid rascunho
+            enderecoExibido <- case resultadoBusca of
                 Left erro -> do
                     mensagemErro erro
-                    renderNovoEndereco cid widget enctype
-                Right dados -> do
-                    let endereco = Endereco cid
-                            (viaCepCep dados)
-                            (viaCepLogradouro dados)
-                            numero
-                            (complementoNaoVazio complemento)
-                            (viaCepBairro dados)
-                            (viaCepLocalidade dados)
-                            (viaCepUf dados)
-                    (preenchido, novoEnctype) <- generateFormPost
-                        (enderecoForm cid (Just endereco))
-                    renderNovoEndereco cid preenchido novoEnctype
-        Nothing -> case resultado of
-            FormSuccess endereco -> do
-                _ <- runDB $ insert endereco
-                mensagemSucesso "Endereço cadastrado com sucesso"
-                redirect (ClienteR cid)
-            _ -> renderNovoEndereco cid widget enctype
+                    pure rascunho
+                Right preenchido -> pure preenchido
+            (widget, enctype) <- generateFormPost (enderecoForm cid (Just enderecoExibido))
+            renderNovoEndereco cid widget enctype
+        Nothing -> do
+            ((resultado, widget), enctype) <- runFormPost (enderecoForm cid Nothing)
+            case resultado of
+                FormSuccess endereco -> do
+                    _ <- runDB $ insert endereco
+                    mensagemSucesso "Endereço cadastrado com sucesso"
+                    redirect (ClienteR cid)
+                _ -> renderNovoEndereco cid widget enctype
 
 getEnderecoEditarR :: EnderecoId -> Handler Html
 getEnderecoEditarR eid = do
@@ -86,45 +102,37 @@ postEnderecoEditarR :: EnderecoId -> Handler Html
 postEnderecoEditarR eid = do
     original <- runDB $ get404 eid
     let cid = enderecoClienteId original
-    ((resultado, widget), enctype) <- runFormPost (enderecoForm cid (Just original))
     buscar <- lookupPostParam "buscar"
     case buscar of
         Just _ -> do
-            cep <- fromMaybe "" <$> lookupPostParam "f1"
-            numero <- fromMaybe (enderecoNumero original) <$> lookupPostParam "f3"
-            complemento <- lookupPostParam "f4"
-            app <- getYesod
-            resposta <- liftIO $ buscarCep (appHttpManager app) cep
-            case resposta of
+            rascunho <- lerRascunhoEndereco cid (Just original)
+            resultadoBusca <- preencherComViaCep cid rascunho
+            enderecoExibido <- case resultadoBusca of
                 Left erro -> do
                     mensagemErro erro
-                    renderEditarEndereco eid cid widget enctype
-                Right dados -> do
-                    let endereco = Endereco cid
-                            (viaCepCep dados)
-                            (viaCepLogradouro dados)
-                            numero
-                            (complementoNaoVazio complemento)
-                            (viaCepBairro dados)
-                            (viaCepLocalidade dados)
-                            (viaCepUf dados)
-                    (preenchido, novoEnctype) <- generateFormPost
-                        (enderecoForm cid (Just endereco))
-                    renderEditarEndereco eid cid preenchido novoEnctype
-        Nothing -> case resultado of
-            FormSuccess endereco -> do
-                runDB $ replace eid endereco
-                mensagemSucesso "Endereço atualizado com sucesso"
-                redirect (ClienteR cid)
-            _ -> renderEditarEndereco eid cid widget enctype
+                    pure rascunho
+                Right preenchido -> pure preenchido
+            (widget, enctype) <- generateFormPost (enderecoForm cid (Just enderecoExibido))
+            renderEditarEndereco eid cid widget enctype
+        Nothing -> do
+            ((resultado, widget), enctype) <- runFormPost (enderecoForm cid (Just original))
+            case resultado of
+                FormSuccess endereco -> do
+                    runDB $ replace eid endereco
+                    mensagemSucesso "Endereço atualizado com sucesso"
+                    redirect (ClienteR cid)
+                _ -> renderEditarEndereco eid cid widget enctype
 
 postEnderecoExcluirR :: EnderecoId -> Handler Html
 postEnderecoExcluirR eid = do
-    cid <- runDB $ do
+    (cid, emUso) <- runDB $ do
         endereco <- get404 eid
-        delete eid
-        pure (enderecoClienteId endereco)
-    mensagemSucesso "Endereço excluído com sucesso"
+        usos <- count [PedidoEnderecoId ==. Just eid]
+        when (usos == 0) $ delete eid
+        pure (enderecoClienteId endereco, usos > 0)
+    if emUso
+        then mensagemErro "Não é possível excluir: existem pedidos vinculados a este endereço"
+        else mensagemSucesso "Endereço excluído com sucesso"
     redirect (ClienteR cid)
 
 complementoNaoVazio :: Maybe Text -> Maybe Text
