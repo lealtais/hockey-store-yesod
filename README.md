@@ -49,4 +49,8 @@ A aplicação consulta a API gratuita [ViaCEP](https://viacep.com.br), no endpoi
 
 ## 6. Integrantes
 
-Pendente: o grupo deve preencher os nomes, usuários GitHub e contribuições antes da entrega.
+| Nome | Conta GitHub | Principais contribuições |
+|---|---|---|
+| Taís Leal Almeida | `@lealtais` | Setup Yesod + SQLite, modelagem das 7 tabelas (`StatusPedido`, centavos em `Int`, `UniqueItemPedido`, `Cliente.userId`), CRUDs de Categoria, Marca e Produto, autenticação e proteção CSRF |
+| Ricardo Panighel | `@ricardopanighel` | Layout visual, navegação e Home (`Hamlet`/`Lucius`), CRUD de Cliente, fluxo de Pedido e ItemPedido com cálculo de total e baixa de estoque, mensagens padronizadas e página 404 |
+| Lucas Silva Fagundes | `@LucasSdevi` | Integração com a API ViaCEP (`Api.ViaCEP`), CRUD de Endereço com preenchimento por CEP, seed de demonstração (`Seed`), testes (`ViaCEPSpec`, `SeedSpec`) e documentação final (`README.md`) |
