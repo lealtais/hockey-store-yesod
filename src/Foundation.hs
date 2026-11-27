@@ -217,6 +217,9 @@ instance Yesod App where
     isAuthorized (ClienteR _) _ = isAuthenticated
     isAuthorized (ClienteEditarR _) _ = isAuthenticated
     isAuthorized (ClienteExcluirR _) _ = isAuthenticated
+    isAuthorized (EnderecoNovoR _) _ = isAuthenticated
+    isAuthorized (EnderecoEditarR _) _ = isAuthenticated
+    isAuthorized (EnderecoExcluirR _) _ = isAuthenticated
     isAuthorized PedidosR _ = isAuthenticated
     isAuthorized (PedidoR _) _ = isAuthenticated
     isAuthorized (PedidoItensR _) _ = isAuthenticated

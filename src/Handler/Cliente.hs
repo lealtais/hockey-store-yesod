@@ -46,6 +46,7 @@ postClientesR = do
 
 getClienteR :: ClienteId -> Handler Html
 getClienteR cid = do
+    req <- getRequest
     (cliente, enderecos, pedidos) <- runDB $ do
         cliente <- get404 cid
         enderecos <- selectList [EnderecoClienteId ==. cid] [Asc EnderecoLogradouro]
